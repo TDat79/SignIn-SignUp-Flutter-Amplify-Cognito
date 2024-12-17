@@ -4,31 +4,31 @@ import 'package:nhom1_signin_up/auth_service.dart';
 class SignInScreen extends StatelessWidget {
   final AuthService authService = AuthService();
 
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign In')),
+      appBar: AppBar(title: Text('Đăng nhập')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
-              controller: emailController,
+              controller: usernameController,
               decoration: InputDecoration(labelText: 'Email'),
             ),
             TextField(
               controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(labelText: 'Mật khẩu'),
               obscureText: true,
             ),
             ElevatedButton(
               onPressed: () async {
-                final email = emailController.text;
+                final username = usernameController.text;
                 final password = passwordController.text;
-                final success = await authService.signIn(email, password);
+                final success = await authService.signIn(username, password);
 
                 if (success) {
                   // Điều hướng đến màn hình chính sau khi đăng nhập thành công
@@ -40,17 +40,17 @@ class SignInScreen extends StatelessWidget {
                   );
                 }
               },
-              child: Text('Sign In'),
+              child: Text('Đăng nhập'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Don’t have an account?'),
+                Text('Bạn chưa có tài khoản?'),
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/signUp');
                   },
-                  child: Text('Sign Up'),
+                  child: Text('Đăng ký'),
                 ),
               ],
             ),

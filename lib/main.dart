@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Amplify Auth Demo',
+      debugShowCheckedModeBanner: false, // Tắt banner "DEBUG"
+      title: 'Part-time App',
       // Thiết lập initialRoute là màn hình đầu tiên khi ứng dụng chạy
       initialRoute: '/signIn', // Màn hình đăng nhập sẽ là màn hình đầu tiên
       routes: {

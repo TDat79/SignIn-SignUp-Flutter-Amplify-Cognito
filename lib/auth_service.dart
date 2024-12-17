@@ -7,13 +7,23 @@ class AuthService {
       final result = await Amplify.Auth.signUp(
         username: email,
         password: password,
-        options: SignUpOptions(userAttributes: {
-          AuthUserAttributeKey.email: email,  // Sử dụng AuthUserAttributeKey.email
-        }),
+        options: SignUpOptions(
+          userAttributes: {
+            AuthUserAttributeKey.email: email, // Sử dụng AuthUserAttributeKey.email
+          },
+        ),
       );
       print('Sign up successful: ${result.isSignUpComplete}');
+    } on AuthException catch (e) {
+      // Kiểm tra nếu lỗi là do email đã tồn tại
+      if (e.message.contains('UsernameExistsException')) {
+        throw Exception('Email đã được đăng ký. Vui lòng sử dụng email khác hoặc đăng nhập.');
+      }
+      // Ném lại lỗi khác nếu không phải lỗi UsernameExistsException
+      throw Exception(e.message);
     } catch (e) {
       print('Sign up failed: $e');
+      throw Exception('Đã xảy ra lỗi khi đăng ký tài khoản.');
     }
   }
 
@@ -42,6 +52,26 @@ class AuthService {
     } catch (e) {
       print('Sign in failed: $e');
       return false;
+    }
+  }
+  /// Hàm đăng xuất
+  Future<void> signOut() async {
+    try {
+      await Amplify.Auth.signOut();
+      print('Đăng xuất thành công');
+    } catch (e) {
+      print('Đăng xuất thất bại: $e');
+      throw Exception('Đăng xuất thất bại');
+    }
+  }
+
+  Future<String?> getCurrentUsername() async {
+    try {
+      final user = await Amplify.Auth.getCurrentUser();
+      return user.username; // Trả về username
+    } catch (e) {
+      print('Lỗi lấy thông tin tài khoản: $e');
+      return 'customer'; // Trường hợp không thể lấy thông tin
     }
   }
 

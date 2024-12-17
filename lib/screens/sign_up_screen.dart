@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nhom1_signin_up/auth_service.dart';
 import 'confirm_sign_up_screen.dart';
 import 'package:email_validator/email_validator.dart';  // Import package kiểm tra định dạng email
+
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -10,12 +11,11 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  final TextEditingController confirmPasswordController = TextEditingController();
   final AuthService _authService = AuthService();
 
   // Kiểm tra mật khẩu hợp lệ theo các yêu cầu của Cognito
   bool isPasswordValid(String password) {
-    // Các yêu cầu cơ bản cho mật khẩu của Cognito (8 ký tự, ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt)
     final RegExp passwordRegExp = RegExp(
       r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$',
     );
@@ -23,9 +23,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _signUp() async {
-    final email = emailController.text;
+    final email = emailController.text.trim(); // Loại bỏ khoảng trắng thừa
     final password = passwordController.text;
+    final confirmPassword = confirmPasswordController.text;
+    String errorMessage = 'Đăng ký thất bại. Vui lòng thử lại.';
 
+    // Kiểm tra nếu email để trống hoặc không hợp lệ
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Email không được để trống')),
@@ -38,6 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+    // Kiểm tra nếu password để trống
     if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Mật khẩu không được để trống')),
@@ -53,32 +57,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+    // Kiểm tra xác nhận mật khẩu
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Mật khẩu và xác nhận mật khẩu không khớp')),
+      );
+      return;
+    }
     try {
       // Gọi hàm đăng ký từ AuthService
       await _authService.signUp(email, password);
+
+      // Kiểm tra nếu widget vẫn còn tồn tại trước khi điều hướng
+      if (!mounted) return;
 
       // Điều hướng đến màn hình nhập OTP, truyền email qua tham số
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => OtpScreen(email: email),  // Truyền email
+          builder: (context) => OtpScreen(email: email), // Truyền email
         ),
       );
     } catch (e) {
-      // Xử lý lỗi đăng ký từ Cognito, thông báo mật khẩu không hợp lệ
-      String errorMessage = 'Đăng ký thất bại';
-
-      // Kiểm tra nếu lỗi là do mật khẩu không hợp lệ theo quy tắc Cognito
-      if (e.toString().contains('password')) {
-        errorMessage = 'Mật khẩu không hợp lệ. Đảm bảo mật khẩu của bạn đáp ứng các yêu cầu của hệ thống';
-      }
-
+      // Kiểm tra nếu widget vẫn còn tồn tại trước khi hiển thị thông báo
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
+        SnackBar(content: Text(e.toString())),
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,9 +103,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
               decoration: InputDecoration(labelText: 'Mật khẩu'),
               obscureText: true,
             ),
+            TextField(
+              controller: confirmPasswordController,
+              decoration: InputDecoration(labelText: 'Xác nhận mật khẩu'),
+              obscureText: true,
+            ),
+            SizedBox(height: 20), // Thêm khoảng cách giữa nút và các trường nhập
             ElevatedButton(
               onPressed: _signUp,
               child: Text('Đăng ký'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Bạn muốn đăng nhập ?'),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/signIn');
+                  },
+                  child: Text('Đăng nhập'),
+                ),
+              ],
             ),
           ],
         ),
