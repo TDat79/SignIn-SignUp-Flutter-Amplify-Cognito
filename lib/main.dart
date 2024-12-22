@@ -9,10 +9,8 @@ import 'amplifyconfiguration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // Cấu hình Amplify
   await _configureAmplify();
-
   runApp(MyApp());
 }
 
@@ -22,7 +20,6 @@ Future<void> _configureAmplify() async {
 
   // Cấu hình Amplify với các plugin cần thiết
   await Amplify.addPlugins([authPlugin]);
-
   // Cấu hình Amplify với cấu hình của bạn
   try {
     // Cấu hình Amplify với thông tin từ AWS
