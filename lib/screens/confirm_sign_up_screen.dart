@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nhom1_signin_up/auth_service.dart';  // Đảm bảo bạn import đúng AuthService
+import 'package:nhom1_signin_up/services/auth_service.dart';  // Đảm bảo bạn import đúng AuthService
 import 'sign_in_screen.dart';
 
 class OtpScreen extends StatefulWidget {

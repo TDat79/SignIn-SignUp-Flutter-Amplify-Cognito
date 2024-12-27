@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nhom1_signin_up/auth_service.dart';
+import 'package:nhom1_signin_up/services/auth_service.dart';
+
+import 'forgot_pass_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   final AuthService authService = AuthService();
@@ -14,16 +16,19 @@ class SignInScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               controller: usernameController,
               decoration: InputDecoration(labelText: 'Email'),
             ),
+            SizedBox(height: 16), // Khoảng cách giữa các trường
             TextField(
               controller: passwordController,
               decoration: InputDecoration(labelText: 'Mật khẩu'),
               obscureText: true,
             ),
+            SizedBox(height: 16), // Khoảng cách trước nút đăng nhập
             ElevatedButton(
               onPressed: () async {
                 final username = usernameController.text;
@@ -40,8 +45,9 @@ class SignInScreen extends StatelessWidget {
                   );
                 }
               },
-              child: Text('Đăng nhập'),
+              child: Center(child: Text('Đăng nhập')),
             ),
+            SizedBox(height: 16), // Khoảng cách trước dòng đăng ký
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -54,7 +60,26 @@ class SignInScreen extends StatelessWidget {
                 ),
               ],
             ),
-
+            SizedBox(height: 24), // Tạo khoảng cách lớn hơn
+            Align(
+              alignment: Alignment.center,
+              child: TextButton(
+                onPressed: () {
+                  // Điều hướng đến màn hình quên mật khẩu
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ForgotPasswordScreen(), // Điều hướng đến ForgotPasswordScreen
+                    ),
+                  );
+                },
+                child: Text(
+                  'Quên mật khẩu?',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+              ),
+            ),
           ],
         ),
       ),

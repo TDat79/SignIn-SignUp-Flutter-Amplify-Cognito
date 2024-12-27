@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nhom1_signin_up/auth_service.dart';
+import 'package:nhom1_signin_up/services/auth_service.dart';
 import '../models/job.dart';
 import '../services/api_service.dart';
 import 'create_job_screen.dart';

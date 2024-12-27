@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nhom1_signin_up/auth_service.dart';
+import 'package:nhom1_signin_up/services/auth_service.dart';
 import 'confirm_sign_up_screen.dart';
 import 'package:email_validator/email_validator.dart';  // Import package kiểm tra định dạng email
 

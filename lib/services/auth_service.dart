@@ -75,4 +75,29 @@ class AuthService {
     }
   }
 
+  Future<void> resetPassword(String email) async {
+    try {
+      await Amplify.Auth.resetPassword(username: email);
+      print('Mã xác nhận đã được gửi đến email: $email');
+    } catch (e) {
+      print('Lỗi khi yêu cầu đặt lại mật khẩu: $e');
+      throw e;
+    }
+  }
+  
+  Future<void> confirmResetPassword(
+      String email, String confirmationCode, String newPassword) async {
+    try {
+      await Amplify.Auth.confirmResetPassword(
+        username: email,
+        newPassword: newPassword,
+        confirmationCode: confirmationCode,
+      );
+      print('Mật khẩu đã được thay đổi thành công.');
+    } catch (e) {
+      print('Lỗi khi xác nhận đặt lại mật khẩu: $e');
+      throw e;
+    }
+  }
+
 }
